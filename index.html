@@ -76,14 +76,19 @@
           });
 
           if (response.ok) {
-            alert("Data submitted successfully!");
-            form.reset();
+            const result = await response.json();
+            if (result.status === "success") {
+              alert("Data submitted successfully!");
+              form.reset();
+            } else {
+              alert("Submission failed: " + (result.message || "Unknown error"));
+            }
           } else {
-            alert("Failed to submit data. Please try again.");
+            alert("Failed to submit data. Server responded with status " + response.status);
           }
         } catch (error) {
           console.error("Error submitting data:", error);
-          alert("An error occurred. Please try again.");
+          alert("An error occurred while submitting the form. Please try again.");
         }
       }
     </script>
