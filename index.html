@@ -1,92 +1,50 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Agent Data Form</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        padding: 0;
-      }
-      form {
-        max-width: 400px;
-        margin: auto;
-      }
-      input, select, button {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        font-size: 16px;
-      }
-      button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-      }
-      button:hover {
-        background-color: #45a049;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>Agent Data Form</h2>
-    <form id="agentForm">
-      <label for="customerId">Customer ID</label>
-      <input type="text" id="customerId" name="customerId" required />
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sheets Test Submission</title>
+</head>
+<body>
+  <h2>Send Test Data to Google Sheets</h2>
+  <button id="sendTestData">Send Test Data</button>
 
-      <label for="customerName">Customer Name</label>
-      <input type="text" id="customerName" name="customerName" required />
+  <script>
+    // Replace with your Web App URL
+    const WEB_APP_URL = "https://script.google.com/macros/s/YOUR_PROJECT_ID/exec";
 
-      <label for="contactInfo">Contact Info</label>
-      <input type="text" id="contactInfo" name="contactInfo" required />
+    async function sendTestData() {
+      const testData = {
+        customerId: "C123",
+        customerName: "John Doe",
+        contactInfo: "john.doe@example.com",
+        product: "Product A",
+        vehicle: "Vehicle 123",
+        agentName: "Agent 12",
+      };
 
-      <label for="product">Product</label>
-      <input type="text" id="product" name="product" required />
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(testData),
+        });
 
-      <label for="vehicle">Vehicle</label>
-      <input type="text" id="vehicle" name="vehicle" required />
-
-      <label for="agentName">Agent Name</label>
-      <select id="agentName" name="agentName" required>
-        <option value="">--Select Agent--</option>
-        <option value="Agent 1">Agent 1</option>
-        <option value="Agent 2">Agent 2</option>
-        <option value="Agent 3">Agent 3</option>
-      </select>
-
-      <button type="button" onclick="submitData()">Submit</button>
-    </form>
-
-    <script>
-      const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxag-3oZB5YwfIUoK-Y18nYLSzXpkUXTUJexDhpJMlhwCyE7I-fZpGAc76WKauc8Kf54Q/exec";
-
-      async function submitData() {
-        const form = document.getElementById("agentForm");
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        try {
-          const response = await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (response.ok) {
-            const result = await response.json();
-            alert(result.status === "success" ? "Data submitted successfully!" : "Submission failed.");
-            form.reset();
-          } else {
-            alert(`Failed to submit data. Status: ${response.status}`);
-          }
-        } catch (error) {
-          console.error("Error submitting data:", error);
-          alert("An error occurred while submitting the form. Please try again.");
+        if (response.ok) {
+          const result = await response.text();
+          alert("Test data submitted successfully! Response: " + result);
+        } else {
+          alert("Failed to submit test data. Status: " + response.status);
         }
+      } catch (error) {
+        console.error("Error sending test data:", error);
+        alert("An error occurred while sending test data.");
       }
-    </script>
-  </body>
+    }
+
+    document.getElementById("sendTestData").addEventListener("click", sendTestData);
+  </script>
+</body>
 </html>
